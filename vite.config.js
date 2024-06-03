@@ -25,6 +25,11 @@ export default defineConfig({
           var: 'p5',
           path: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js',
         },
+        {
+          name: 'matter-js',
+          var: 'Matter',
+          path: 'https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js',
+        },
       ],
     }),
   ],

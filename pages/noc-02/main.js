@@ -2,53 +2,99 @@
  * 随机
  */
 
+import { Engine, Vector, Bodies } from 'matter-js'
 import { useP5 } from '../../utils/main'
 import './main.css'
+import { Render } from 'matter-js'
+import { Composite } from 'matter-js'
+import { Body } from 'matter-js'
+import { Runner } from 'matter-js'
 const app = document.querySelector('#app')
 
 useP5((p) => {
-  const s = 500
-  const offset = p.createSlider(0, 0.05, 0.01, 0.01)
-  offset.position(10, 10)
-  offset.size(100)
-  const text = p.createSpan('0.01')
-  text.position(120, 10)
-  text.style('color', '#121212')
+  const w = 640
+  const h = 360
+  let engine = Engine.create()
 
-  offset.changed(() => {
-    text.html(offset.value())
-  })
+  class Box {
+    constructor(x, y) {
+      this.x = x
+      this.y = y
+      this.w = 16
 
-  class Walker {
-    constructor() {
-      this.pos = p.createVector(s / 2, s / 2)
-      this.r = 1
-
-      this.tx = 0
-      this.ty = 100000
+      this.body = Bodies.rectangle(x, y, this.w, this.w)
+      Composite.add(engine.world, this.body)
     }
 
-    step() {
-      this.pos.x = p.map(p.noise(this.tx), 0, 1, 0, s)
-      this.pos.y = p.map(p.noise(this.ty), 0, 1, 0, s)
-      this.tx += offset.value()
-      this.ty += offset.value()
+    show() {
+      const { position, angle } = this.body
+      p.rectMode(p.CENTER)
+      p.stroke(0)
+      p.strokeWeight(2)
+      p.fill(127)
+
+      p.push()
+      p.translate(position.x, position.y)
+      p.rotate(angle)
+      p.square(0, 0, this.w)
+      p.pop()
     }
 
-    display() {
-      p.noStroke()
-      p.fill(100)
-      p.circle(this.pos.x, this.pos.y, this.r * 2)
+    checkDisappear() {
+      const { x, y } = this.body.position
+      return x < 0 || x > w || y < 0 || y > h
+    }
+
+    removeBody() {
+      Composite.remove(engine.world, this.body)
     }
   }
-  const walker = new Walker()
+
+  class Boundary {
+    constructor(x, y, w, h) {
+      this.x = x
+      this.y = y
+      this.w = w
+      this.h = h
+
+      this.body = Bodies.rectangle(this.x, this.y, this.w, this.h, {
+        isStatic: true,
+      })
+      Composite.add(engine.world, this.body)
+    }
+
+    show() {
+      p.rectMode(p.CENTER)
+      p.stroke(0)
+      p.strokeWeight(2)
+      p.fill(127)
+      p.rect(this.x, this.y, this.w, this.h)
+    }
+  }
+
   p.setup = () => {
-    p.createCanvas(s, s)
-    p.background(250)
+    p.createCanvas(w, h)
   }
 
+  const boxes = []
+  const boundaries = [new Boundary(w / 3, h - 50, w / 2, 10), new Boundary((w / 3) * 2, h - 100, w / 3, 10)]
   p.draw = () => {
-    walker.step()
-    walker.display()
+    Engine.update(engine)
+    p.background(255)
+    if (p.mouseIsPressed) {
+      boxes.push(new Box(p.mouseX, p.mouseY))
+    }
+
+    for (let i = boxes.length - 1; i >= 0; i--) {
+      if (boxes[i].checkDisappear()) {
+        boxes.splice(i, 1)
+      } else {
+        boxes[i].show()
+      }
+    }
+
+    for (let boundary of boundaries) {
+      boundary.show()
+    }
   }
 }, app)
