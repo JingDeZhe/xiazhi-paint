@@ -5,6 +5,7 @@ import cdn from 'vite-plugin-cdn-import'
 
 const pages = globSync('./*.html').map((v) => v.replace(/^(.*)\.html/, '$1'))
 export default defineConfig({
+  base: '/xiazhi-paint/',
   server: {
     port: 5184,
   },
