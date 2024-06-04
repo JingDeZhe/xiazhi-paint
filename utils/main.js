@@ -5,6 +5,9 @@ import p5 from 'p5'
  */
 export const useP5 = (fn, parentEl = document.body, title) => {
   const wrap = document.createElement('div')
+  wrap.addEventListener('contextmenu', (e) => {
+    e.preventDefault()
+  })
   if (title) {
     const el = document.createElement('p')
     el.innerText = title
