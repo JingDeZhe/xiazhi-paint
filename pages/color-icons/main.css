@@ -1,0 +1,67 @@
+html,
+body,
+#app {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#app {
+  box-sizing: border-box;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.icons .icon-box {
+  display: none;
+}
+
+.icons .icon-box,
+.tools {
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 20px 20px 60px #c4cacf, -20px -20px 60px #ffffff;
+  overflow: hidden;
+}
+
+.title {
+  z-index: 1;
+  font-size: 2rem;
+  font-family: 'Ink Free';
+  transform: translate(-100px, 40px);
+}
+
+.tools {
+  width: 300px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tools > span {
+  flex: 1;
+  text-align: center;
+  padding: 10px 20px;
+  cursor: default;
+  transition: all 0.1s ease-in-out;
+  user-select: none;
+}
+
+.tools > span:hover {
+  background-color: #f37848;
+  color: #fff;
+}
+
+.icons .icon {
+  display: block;
+  width: 300px;
+  height: 300px;
+}
+
+.icons .icon-box.active {
+  display: block;
+}
